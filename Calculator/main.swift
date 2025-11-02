@@ -9,7 +9,7 @@ import Foundation
 
 print("Welcome to calculator!\nSelect operation: +, -, * or /")
 
-var operation: String? = readLine()
+let operation = readLine()
 
 switch operation {
 case "+", "-", "*", "/": break
@@ -18,11 +18,12 @@ case nil:
     exit(0)
 default:
     print("Input error - input should be one of: +, -, *, /")
+    exit(0)
 }
 
 print("Input first integer")
 
-var firstNumber: Double?
+let firstNumber: Double
 
 if let input = readLine(), let value = Int(input) {
     firstNumber = Double(value)
@@ -33,7 +34,7 @@ if let input = readLine(), let value = Int(input) {
 
 print("Input second integer")
 
-var secondNumber: Double?
+let secondNumber: Double
 
 if let input = readLine(), let value = Int(input) {
     secondNumber = Double(value)
@@ -46,15 +47,15 @@ if let input = readLine(), let value = Int(input) {
     exit(0)
 }
 
-print("Calculating: \(firstNumber!) \(operation!) \(secondNumber!)")
+print("Calculating: \(firstNumber) \(operation ?? "?") \(secondNumber)")
 
 let result: Double
 
 switch operation {
-case "+": result = firstNumber! + secondNumber!
-case "-": result = firstNumber! - secondNumber!
-case "*": result = firstNumber! * secondNumber!
-case "/": result = firstNumber! / secondNumber!
+case "+": result = firstNumber + secondNumber
+case "-": result = firstNumber - secondNumber
+case "*": result = firstNumber * secondNumber
+case "/": result = firstNumber / secondNumber
 default :
     print("Unknown operation")
     exit(0)
