@@ -22,10 +22,10 @@ default:
 
 print("Input first integer")
 
-var firstNumber: Int?
+var firstNumber: Double?
 
 if let input = readLine(), let value = Int(input) {
-    firstNumber = value
+    firstNumber = Double(value)
 } else {
     print("Input error - enter an integer")
     exit(0)
@@ -33,11 +33,11 @@ if let input = readLine(), let value = Int(input) {
 
 print("Input second integer")
 
-var secondNumber: Int?
+var secondNumber: Double?
 
 if let input = readLine(), let value = Int(input) {
-    secondNumber = value
-    if operation == "/" && value == 0 {
+    secondNumber = Double(value)
+    if operation == "/" && secondNumber == 0 {
         print("Zero division error")
         exit(0)
     }
@@ -48,7 +48,7 @@ if let input = readLine(), let value = Int(input) {
 
 print("Calculating: \(firstNumber!) \(operation!) \(secondNumber!)")
 
-let result: Int
+let result: Double
 
 switch operation {
 case "+": result = firstNumber! + secondNumber!
