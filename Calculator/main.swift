@@ -7,6 +7,14 @@
 
 import Foundation
 
+var count: Int = 0
+
+func numbersInputText() -> String {
+    let event = count == 0 ? "first" : "second"
+    count += 1
+    return "Input \(event) integer"
+}
+
 print("Welcome to calculator!\nSelect operation: +, -, * or /")
 
 let operation = readLine()
@@ -21,7 +29,7 @@ default:
     exit(0)
 }
 
-print("Input first integer")
+print(numbersInputText())
 
 let firstNumber: Double
 
@@ -32,7 +40,7 @@ if let input = readLine(), let value = Int(input) {
     exit(0)
 }
 
-print("Input second integer")
+print(numbersInputText())
 
 let secondNumber: Double
 
