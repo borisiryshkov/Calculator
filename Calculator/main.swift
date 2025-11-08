@@ -7,66 +7,57 @@
 
 import Foundation
 
-var count: Int = 0
+var state: Bool = true
 
-func numbersInputText() -> String {
-    let event = count == 0 ? "first" : "second"
-    count += 1
-    return "Input \(event) integer"
+var firstNumber: Double = 0
+var secondNumber: Double = 0
+
+var result: Double = 0
+
+func numbersInput() -> Void {
+    let event = state ? "first" : "second"
+    print("Input \(event) integer")
+    if let input = readLine(), let value = Int(input) {
+        if operation == "/" && value == 0 && state == false {
+            print("Zero division error")
+            exit(0)
+        }
+        let number = Double(value)
+        if state {
+            state = false
+            firstNumber = number
+        } else {
+            secondNumber = number
+        }
+    } else {
+        print("Input error - enter an integer")
+        exit(0)
+    }
 }
 
 print("Welcome to calculator!\nSelect operation: +, -, * or /")
 
-let operation = readLine()
+let operation = readLine() ?? "?"
 
 switch operation {
-case "+", "-", "*", "/": break
-case nil:
-    print("Unknown operation")
-    exit(0)
+case "+", "-", "*", "/":
+    numbersInput()
+    numbersInput()
+    if operation == "+" {
+        result = firstNumber + secondNumber
+    } else if operation == "-" {
+        result = firstNumber - secondNumber
+    } else if operation == "*" {
+        result = firstNumber * secondNumber
+    } else if operation == "/" {
+        result = firstNumber / secondNumber
+    } else {
+        exit(0)
+    }
 default:
     print("Input error - input should be one of: +, -, *, /")
     exit(0)
 }
 
-print(numbersInputText())
-
-let firstNumber: Double
-
-if let input = readLine(), let value = Int(input) {
-    firstNumber = Double(value)
-} else {
-    print("Input error - enter an integer")
-    exit(0)
-}
-
-print(numbersInputText())
-
-let secondNumber: Double
-
-if let input = readLine(), let value = Int(input) {
-    secondNumber = Double(value)
-    if operation == "/" && secondNumber == 0 {
-        print("Zero division error")
-        exit(0)
-    }
-} else {
-    print("Input error - enter an integer")
-    exit(0)
-}
-
-print("Calculating: \(firstNumber) \(operation ?? "?") \(secondNumber)")
-
-let result: Double
-
-switch operation {
-case "+": result = firstNumber + secondNumber
-case "-": result = firstNumber - secondNumber
-case "*": result = firstNumber * secondNumber
-case "/": result = firstNumber / secondNumber
-default :
-    print("Unknown operation")
-    exit(0)
-}
-
+print("Calculating: \(firstNumber) \(operation) \(secondNumber)")
 print("Result: \(result)")
