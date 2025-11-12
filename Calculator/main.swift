@@ -1,11 +1,4 @@
-//
-//  main.swift
-//  Calculator
-//
-//  Created by Борис Ирышков on 02.11.2025.
-//
-
-import Foundation
+import Darwin
 
 var state: Bool = true
 
@@ -14,50 +7,73 @@ var secondNumber: Double = 0
 
 var result: Double = 0
 
-func numbersInput() -> Void {
+func inputNumbers() {
     let event = state ? "first" : "second"
     print("Input \(event) integer")
-    if let input = readLine(), let value = Int(input) {
-        if operation == "/" && value == 0 && state == false {
-            print("Zero division error")
-            exit(0)
-        }
-        let number = Double(value)
-        if state {
-            state = false
-            firstNumber = number
+    while let input = readLine() {
+        if let value = Int(input) {
+            let number = Double(value)
+            if state {
+                state = false
+                firstNumber = number
+            } else {
+                state = true
+                secondNumber = number
+            }
+            break
         } else {
-            secondNumber = number
+            print("Input error - enter an integer")
+            continue
         }
-    } else {
-        print("Input error - enter an integer")
-        exit(0)
     }
 }
 
-print("Welcome to calculator!\nSelect operation: +, -, * or /")
+print("Welcome to calculator!")
 
-let operation = readLine() ?? "?"
+let message: String = "Select operation: +, -, * or /. For exit, enter 'q'. For history, enter 'h'."
 
-switch operation {
-case "+", "-", "*", "/":
-    numbersInput()
-    numbersInput()
-    if operation == "+" {
-        result = firstNumber + secondNumber
-    } else if operation == "-" {
-        result = firstNumber - secondNumber
-    } else if operation == "*" {
-        result = firstNumber * secondNumber
-    } else if operation == "/" {
-        result = firstNumber / secondNumber
-    } else {
-        exit(0)
+var history: [String] = []
+
+while true {
+    print(message)
+    let operation = readLine() ?? "?"
+    if operation == "h" {
+        for item in history {
+            print(item)
+        }
+        continue
     }
-default:
-    print("Input error - input should be one of: +, -, *, /")
-    exit(0)
-}
+    switch operation {
+    case "+", "-", "*", "/":
+        for _ in 0...1 {
+            inputNumbers()
+        }
+        if operation == "+" {
+            result = firstNumber + secondNumber
+        } else if operation == "-" {
+            result = firstNumber - secondNumber
+        } else if operation == "*" {
+            result = firstNumber * secondNumber
+        } else if operation == "/" {
+            if secondNumber != 0 {
+                result = firstNumber / secondNumber
+            } else {
+                print("Zero division error")
+                print("\n-----------------------------------------------------------\n")
+                continue
+            }
+        }
+        history.append("\(firstNumber) \(operation) \(secondNumber)" + " = " + String(result))
+    case "q":
+        exit(0)
+    default:
+        print("Input error - input should be one of: +, -, *, /")
+        print("\n-----------------------------------------------------------\n")
+        continue
+    }
 
-print("Calculating: \(firstNumber) \(operation) \(secondNumber)")
-print("Result: \(result)")
+    print("Calculating: \(firstNumber) \(operation) \(secondNumber)")
+    print("Result: \(result)")
+    
+    print("\n-----------------------------------------------------------\n")
+}
