@@ -2,78 +2,93 @@ import Darwin
 
 var state: Bool = true
 
-var firstNumber: Double = 0
-var secondNumber: Double = 0
+var firstNumber: Double?
+var secondNumber: Double?
 
-var result: Double = 0
+var history: [String] = []
 
 func inputNumbers() {
     let event = state ? "first" : "second"
     print("Input \(event) integer")
     while let input = readLine() {
-        if let value = Int(input) {
-            let number = Double(value)
-            if state {
-                state = false
-                firstNumber = number
-            } else {
-                state = true
-                secondNumber = number
-            }
-            break
-        } else {
+        guard let value = Int(input) else {
             print("Input error - enter an integer")
             continue
+        }
+        let number = Double(value)
+        if state {
+            state = false
+            firstNumber = number
+        } else {
+            state = true
+            secondNumber = number
+        }
+        break
+    }
+}
+
+let operationMessage: String = "Select operation: +, -, *, /. For back to the menu, enter 'b'"
+
+func calculation() {
+    while true {
+        print(operationMessage)
+        let operation = readLine() ?? "?"
+        switch operation {
+        case "+", "-", "*", "/":
+            for _ in 0...1 {
+                inputNumbers()
+                guard !(operation == "/" && secondNumber == 0) else {
+                    secondNumber = nil
+                    print("Zero division error")
+                    print("\n-----------------------------------------------------------\n")
+                    break
+                }
+            }
+            var result: Double = 0
+            if let firstNumber, let secondNumber {
+                if operation == "+" {
+                    result = firstNumber + secondNumber
+                } else if operation == "-" {
+                    result = firstNumber - secondNumber
+                } else if operation == "*" {
+                    result = firstNumber * secondNumber
+                } else if operation == "/" {
+                    result = firstNumber / secondNumber
+                }
+                let example: String = "\(firstNumber) \(operation) \(secondNumber)"
+                history.append(example + " = " + String(result))
+                print("Calculating: \(example)")
+                print("Result: \(result)")
+                print("\n-----------------------------------------------------------\n")
+            }
+        case "b": return
+        default:
+            print("Input error - input should be one of: +, -, *, /")
+            print("\n-----------------------------------------------------------\n")
         }
     }
 }
 
 print("Welcome to calculator!")
 
-let message: String = "Select operation: +, -, * or /. For exit, enter 'q'. For history, enter 'h'."
-
-var history: [String] = []
+let actionMessage: String = "For calculation, enter 'c'. For history, enter 'h'. For exit, enter 'q'."
 
 while true {
-    print(message)
+    print(actionMessage)
     let operation = readLine() ?? "?"
-    if operation == "h" {
+    switch operation {
+    case "c":
+        calculation()
+    case "h":
         for item in history {
             print(item)
         }
         continue
-    }
-    switch operation {
-    case "+", "-", "*", "/":
-        for _ in 0...1 {
-            inputNumbers()
-        }
-        if operation == "+" {
-            result = firstNumber + secondNumber
-        } else if operation == "-" {
-            result = firstNumber - secondNumber
-        } else if operation == "*" {
-            result = firstNumber * secondNumber
-        } else if operation == "/" {
-            if secondNumber != 0 {
-                result = firstNumber / secondNumber
-            } else {
-                print("Zero division error")
-                print("\n-----------------------------------------------------------\n")
-                continue
-            }
-        }
-        history.append("\(firstNumber) \(operation) \(secondNumber)" + " = " + String(result))
     case "q":
         exit(0)
     default:
-        print("Input error - input should be one of: +, -, *, /")
+        print("Input error - input should be one of: 'c', 'h' or 'q'")
         print("\n-----------------------------------------------------------\n")
         continue
     }
-
-    print("Calculating: \(firstNumber) \(operation) \(secondNumber)")
-    print("Result: \(result)")
-    
-    print("\n-----------------------------------------------------------\n")
 }
